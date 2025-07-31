@@ -1,11 +1,10 @@
 const router = require('express').Router();
 const { NotFoundError } = require('../utils/errors');
 
-const { getItems, createItem, deleteItem } = require('../controllers/clothingItems');
+const { likeItem, dislikeItem } = require('../controllers/likes');
 
-router.get('/', getItems);
-router.post('/', createItem);
-router.delete('/:id', deleteItem);
+router.put('/likes', likeItem);
+router.delete('/likes', dislikeItem);
 
 router.use((req, res, next) => {
   next(new NotFoundError('Requested resource not found'));

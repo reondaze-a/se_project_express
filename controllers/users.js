@@ -15,7 +15,13 @@ module.exports.getUser = (req, res, next) => {
       }
       res.send({ data: user });
     })
-    .catch(err => next(err));
+    .catch(err => {
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Invalid user ID'));
+      }
+
+      next(err);
+    });
 }
 
 module.exports.createUser = (req, res, next) => {
@@ -26,6 +32,6 @@ module.exports.createUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Invalid user data'));
       }
-      next(new InternalServerError());
+      next(err);
     });
 }
