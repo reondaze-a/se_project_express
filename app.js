@@ -22,13 +22,14 @@ app.use((req, res, next) => {
 
 // Importing routes
 app.use("/users", require('./routes/users'));
+app.use("/items/:itemId/likes", require('./routes/likes'));
 app.use("/items", require('./routes/clothingItems'));
-app.use("/items/:itemId", require('./routes/likes'));
+
 
 // Central error handling middleware
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
-
+  console.error(err);
   res.status(statusCode).json({
     message: statusCode === 500 ?  'Requested resource not found' : message,
   });

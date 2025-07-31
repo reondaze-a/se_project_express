@@ -27,5 +27,11 @@ module.exports.deleteItem = (req, res, next) => {
       }
       res.send({ data: item });
     })
-    .catch(err => next(err));
+    .catch(err => {
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Invalid item ID'));
+      }
+
+      next(err)
+    });
 }
