@@ -1,14 +1,9 @@
 const router = require('express').Router();
-const { NotFoundError } = require('../utils/errors');
 
 const { getItems, createItem, deleteItem } = require('../controllers/clothingItems');
 
 router.get('/', getItems);
 router.post('/', createItem);
 router.delete('/:id', deleteItem);
-
-router.use((req, res, next) => {
-  next(new NotFoundError('Requested resource not found'));
-});
 
 module.exports = router;

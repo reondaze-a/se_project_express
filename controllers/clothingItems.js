@@ -1,37 +1,33 @@
 const Item = require('../models/clothingItem');
 const { NotFoundError, BadRequestError, InternalServerError } = require('../utils/errors');
 
-module.exports.getItems = (req, res, next) => {
-  Item.find({})
+module.exports.getItems = (req, res, next) => Item.find({})
     .then(items => res.send({ data: items }))
-    .catch(() => next(new InternalServerError()));
-}
+    .catch(() => next(new InternalServerError()))
 
 module.exports.createItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
-  Item.create({ name, weather, imageUrl, owner: req.user._id })
+  return Item.create({ name, weather, imageUrl, owner: req.user._id })
     .then(item => res.status(201).send({ data: item }))
     .catch(err => {
         if (err.name === 'ValidationError') {
           return next(new BadRequestError('Invalid item data'));
         }
-        next(err);
+        return next(err);
       });
 }
 
-module.exports.deleteItem = (req, res, next) => {
-  Item.findByIdAndDelete(req.params.id)
+module.exports.deleteItem = (req, res, next) => Item.findByIdAndDelete(req.params.id)
     .then(item => {
       if (!item) {
         return next(new NotFoundError('Item not found'));
       }
-      res.send({ data: item });
+      return res.send({ data: item });
     })
     .catch(err => {
       if (err.name === 'CastError') {
         return next(new BadRequestError('Invalid item ID'));
       }
 
-      next(err)
-    });
-}
+      return next(err)
+    })

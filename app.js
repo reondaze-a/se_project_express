@@ -1,6 +1,6 @@
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
+const routes = require('./routes/index');
 
 
 const app = express();
@@ -21,17 +21,20 @@ app.use((req, res, next) => {
 
 
 // Importing routes
-app.use("/users", require('./routes/users'));
-app.use("/items/:itemId/likes", require('./routes/likes'));
-app.use("/items", require('./routes/clothingItems'));
+app.use("/", routes);
 
 
 // Central error handling middleware
-app.use((err, req, res, next) => {
+app.use((req, res, next) => {
+  const err = new Error("Requested resource not found");
+  err.statusCode = 404;
+  next(err);
+});
+
+app.use((err, req, res, _next) => {
   const { statusCode = 500, message } = err;
-  console.error(err);
   res.status(statusCode).json({
-    message: statusCode === 500 ?  'Requested resource not found' : message,
+    message: statusCode === 500 ?  'An internal server error has occured' : message,
   });
 });
 
