@@ -22,6 +22,10 @@ module.exports.deleteItem = (req, res, next) => Item.findByIdAndDelete(req.param
       if (!item) {
         return next(new NotFoundError('Item not found'));
       }
+
+      if (item.owner.toString() !== req.user._id) {
+        return next(new BadRequestError('You can only delete your own items'));
+      }
       return res.send({ data: item });
     })
     .catch(err => {
@@ -29,5 +33,5 @@ module.exports.deleteItem = (req, res, next) => Item.findByIdAndDelete(req.param
         return next(new BadRequestError('Invalid item ID'));
       }
 
-      return next(err)
+      return next(err);
     })
