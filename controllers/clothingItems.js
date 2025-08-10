@@ -1,5 +1,5 @@
 const Item = require('../models/clothingItem');
-const { NotFoundError, BadRequestError, InternalServerError } = require('../utils/errors');
+const { NotFoundError, BadRequestError, InternalServerError, ForbiddenError } = require('../utils/errors');
 
 module.exports.getItems = (req, res, next) => Item.find({})
     .then(items => res.send({ data: items }))
@@ -24,7 +24,7 @@ module.exports.deleteItem = (req, res, next) => Item.findByIdAndDelete(req.param
       }
 
       if (item.owner.toString() !== req.user._id) {
-        return next(new BadRequestError('You can only delete your own items'));
+        return next(new ForbiddenError('You can only delete your own items'));
       }
       return res.send({ data: item });
     })

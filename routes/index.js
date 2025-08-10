@@ -12,7 +12,7 @@ router.use('/users', auth, usersRouter);
 router.use('/items', clothingItemsRouter);
 router.use('/items/:itemId/likes', auth, likesRouter);
 
-//Authentication routes
+// Authentication routes
 router.post('/signin', login);
 router.post('/signup', createUser);
 

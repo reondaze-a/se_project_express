@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+const bycrypt = require('bcryptjs');
 const User = require('../models/user');
 const {
   NotFoundError,
@@ -6,8 +8,8 @@ const {
   ConflictError,
   AuthenticationError
  } = require('../utils/errors');
-const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../utils/token');
+
 
 module.exports.getUsers = (req, res, next) => User.find({})
     .then(users => res.send({ data: users }))
@@ -44,8 +46,8 @@ module.exports.createUser = (req, res, next) => {
 
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Invalid user data'));
-      }
-      else if (err.code === 11000) {
+      } 
+      if (err.code === 11000) {
         return next(new ConflictError('Email already exists'));
       }
       return next(err);
@@ -54,6 +56,10 @@ module.exports.createUser = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(new BadRequestError('Email and password are required'));
+  }
 
   return User.findUserByCredentials(email, password)
     .then(user => {
