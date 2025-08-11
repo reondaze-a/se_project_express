@@ -34,8 +34,8 @@ The back-end project is focused on creating a server for the WTWR application. Y
 - prettier
 
 ## API Endpoints
-`/signup` — Register a new user
-`/signin` — Login
-`/users` — Get user info
-`/items` — CRUD for clothing items
-`/items/:id/likes` — Like/unlike an item
+- `/signup` — Register a new user
+- `/signin` — Login
+- `/users` — Get user info
+- `/items` — CRUD for clothing items
+- `/items/:id/likes` — Like/unlike an item
