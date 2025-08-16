@@ -12,9 +12,6 @@ const {
 const { JWT_SECRET } = require('../utils/token');
 
 
-module.exports.getUsers = (req, res, next) => User.find({})
-    .then(users => res.send({ data: users }))
-    .catch(() => next(new InternalServerError()));
 
 module.exports.getCurrentUser = (req, res, next) => User.findById(req.user._id)
     .then(user => {
