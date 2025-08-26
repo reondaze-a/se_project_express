@@ -1,38 +1,46 @@
-const Item = require('../models/clothingItem');
-const { NotFoundError, BadRequestError, InternalServerError, ForbiddenError } = require('../utils/errors');
-const { createSuccess } = require('../utils/successCodes');
+const Item = require("../models/clothingItem");
+const {
+  NotFoundError,
+  BadRequestError,
+  InternalServerError,
+  ForbiddenError,
+} = require("../utils/errors");
+const { createSuccess } = require("../utils/successCodes");
 
-module.exports.getItems = (req, res, next) => Item.find({})
-    .then(items => res.send({ data: items }))
-    .catch(() => next(new InternalServerError()))
+module.exports.getItems = (req, res, next) =>
+  Item.find({})
+    .sort({ createdAt: -1 }) // Latest goes first
+    .then((items) => res.send({ data: items }))
+    .catch(() => next(new InternalServerError()));
 
 module.exports.createItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
   return Item.create({ name, weather, imageUrl, owner: req.user._id })
-    .then(item => res.status(createSuccess).send({ data: item }))
-    .catch(err => {
-        if (err.name === 'ValidationError') {
-          return next(new BadRequestError('Invalid item data'));
-        }
-        return next(err);
-      });
-}
+    .then((item) => res.status(createSuccess).send({ data: item }))
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        return next(new BadRequestError("Invalid item data"));
+      }
+      return next(err);
+    });
+};
 
-module.exports.deleteItem = (req, res, next) => Item.findByIdAndDelete(req.params.id)
-    .then(item => {
+module.exports.deleteItem = (req, res, next) =>
+  Item.findByIdAndDelete(req.params.id)
+    .then((item) => {
       if (!item) {
-        return next(new NotFoundError('Item not found'));
+        return next(new NotFoundError("Item not found"));
       }
 
       if (item.owner.toString() !== req.user._id) {
-        return next(new ForbiddenError('You can only delete your own items'));
+        return next(new ForbiddenError("You can only delete your own items"));
       }
       return res.send({ data: item });
     })
-    .catch(err => {
-      if (err.name === 'CastError') {
-        return next(new BadRequestError('Invalid item ID'));
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return next(new BadRequestError("Invalid item ID"));
       }
 
       return next(err);
-    })
+    });
