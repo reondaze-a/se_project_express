@@ -4,7 +4,6 @@ const User = require('../models/user');
 const {
   NotFoundError,
   BadRequestError,
-  InternalServerError,
   ConflictError,
   AuthenticationError
  } = require('../utils/errors');
@@ -70,7 +69,7 @@ module.exports.login = (req, res, next) => {
       }
       return next(err);
     });
-  }
+}
 
 module.exports.updateProfile = (req, res, next) => {
   const { name, avatar } = req.body;
