@@ -40,9 +40,9 @@ module.exports.createUser = (req, res, next) => {
       res.status(createSuccess).send({ data: userData })
     })
     .catch(err => {
-
       if (err.name === 'ValidationError') {
-        return next(new BadRequestError('Invalid user data'));
+        const errorMessages = Object.values(err.errors).map(e => e.message);
+        return next(new BadRequestError(errorMessages[0]));
       }
       if (err.code === 11000) {
         return next(new ConflictError('Email already exists'));

@@ -7,8 +7,8 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: 2,
-    maxlength: 30,
+    minlength: [2, "Name must be at least 2 characters"],
+    maxlength: [30, "Name cannot be longer than 30 characters"],
   },
   avatar: {
     type: String,
