@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const routes = require("./routes/index");
+const { errors } = require("celebrate");
 require("dotenv").config();
 
 const app = express();
@@ -17,10 +18,12 @@ mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/wtwr_db"); 
 app.use("/", routes);
 
 // Central error handling middleware
-app.use((req, res, next) => {
+app.use(errors()); // Celebrate error handler
+
+app.use((req, res) => {
   const err = new Error("Requested resource not found");
   err.statusCode = 404;
-  next(err);
+  res.send(err);
 });
 
 app.use((err, req, res, next) => {
