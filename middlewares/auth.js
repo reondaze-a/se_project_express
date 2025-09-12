@@ -6,6 +6,8 @@ const handleAuthError = (next) => {
   next(new AuthenticationError('Authorization error'));
 };
 
+console.log('[AUTH MIDDLEWARE LOADED]', __filename);
+
 const extractBearerToken = (header) => header.replace('Bearer ', '');
 
 module.exports = (req, res, next) => {
