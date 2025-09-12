@@ -61,6 +61,8 @@ app.use((err, req, res, next) => {
     message:
       statusCode === 500 ? "An internal server error has occured" : message,
   });
+
+  next();
 });
 
 app.listen(PORT, () => {
