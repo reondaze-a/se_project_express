@@ -23,6 +23,8 @@ The back-end project for the WTWR application. This back-end repo manages data f
 - jsonwebtoken
 - cors
 - validator
+- Joi
+- celebrate
 
 ###   Dev Dependencies:
 
