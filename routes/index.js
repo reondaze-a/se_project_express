@@ -18,9 +18,13 @@ router.use('/items', clothingItemsRouter);
 router.use('/items/:itemId/likes', auth, likesRouter);
 
 // Authentication routes
+app.get('/crash-test', () => { // test code
+  setTimeout(() => {
+    throw new Error('Server will crash now');
+  }, 0);
+});
+
 router.post('/signin', celebrateTests.signIn, login);
-
-
 router.post('/signup', celebrateTests.signUp, createUser);
 
 module.exports = router;
