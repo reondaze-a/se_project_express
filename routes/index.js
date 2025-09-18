@@ -18,7 +18,7 @@ router.use('/items', clothingItemsRouter);
 router.use('/items/:itemId/likes', auth, likesRouter);
 
 // Authentication routes
-app.get('/crash-test', () => { // test code
+router.get('/crash-test', () => { // test code
   setTimeout(() => {
     throw new Error('Server will crash now');
   }, 0);
