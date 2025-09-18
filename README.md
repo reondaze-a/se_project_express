@@ -1,6 +1,10 @@
 # WTWR (What to Wear?): Back End
 The back-end project for the WTWR application. This back-end repo manages data flow and authentication for the WTWR project.
 
+[Click here to see the front-end repo of the project](https://github.com/reondaze-a/se_project_react)
+
+[WTWR App](https://whattowear.strangled.net/)
+
 ## Features
 - User registration and authentication (JWT)
 - CRUD operations for clothing items
