@@ -8,6 +8,7 @@ const { isCelebrateError } = require("celebrate");
 const routes = require("./routes/index");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { apiLimiter } = require("./middlewares/limiter")
+const { corsOpts } = require("./middlewares/cors");
 
 const { NotFoundError } = require("./utils/errors")
 
@@ -16,12 +17,18 @@ const app = express();
 const { PORT = 3001 } = process.env;
 
 app.use(helmet());
-app.use(cors());
+// setup cors
+app.use(cors(corsOpts));
+app.options('*', cors(corsOpts));
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/wtwr_db");
 
+
+app.set('trust proxy', 1)
 // Setup logger
 app.use(requestLogger);
 // setup limiter
