@@ -1,14 +1,21 @@
+require("dotenv").config();
+
 const express = require("express");
+const helmet = require("helmet");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const routes = require("./routes/index");
 const { isCelebrateError } = require("celebrate");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-require("dotenv").config();
+const { apiLimiter } = require("./middlewares/limiter")
+
+const { NotFoundError } = require("./utils/errors")
+
 
 const app = express();
 const { PORT = 3001 } = process.env;
 
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -17,21 +24,17 @@ mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/wtwr_db");
 
 // Setup logger
 app.use(requestLogger);
+// setup limiter
+app.use(apiLimiter)
 // Importing routes
 app.use("/", routes);
 
-app.use((req, res) => { // non error route
-  res.status(404).json({ message: "Requested resource not found" });
+app.use((req, res, next) => { // non error route
+  next(new NotFoundError("Requested resource not found"))
 });
 // enable error logger
 app.use(errorLogger)
 
-// centralized / fallback error handler
-app.use((req, res) => {
-  const err = new Error("Requested resource not found");
-  err.statusCode = 404;
-  res.send(err);
-});
 
 app.use((err, req, res, next) => {
   if (isCelebrateError(err)) {

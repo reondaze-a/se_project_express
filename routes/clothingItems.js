@@ -7,10 +7,10 @@ const { getItems, createItem, deleteItem } = require('../controllers/clothingIte
 // celebrate validation schema for POST /items
 
 
-router.get('/', celebrateTests.getTest, getItems);
+router.get('/', getItems);
 
 router.post('/', auth, celebrateTests.postItemTest, createItem);
 
-router.delete('/:id', auth, deleteItem);
+router.delete('/:id', auth, celebrateTests.idTest, deleteItem);
 
 module.exports = router;

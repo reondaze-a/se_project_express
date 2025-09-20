@@ -19,24 +19,26 @@ module.exports.createItem = (req, res, next) => {
     .then((item) => res.status(createSuccess).send({ data: item }))
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return next(new BadRequestError("Invalid item data"));
+        throw next(new BadRequestError("Invalid item data"));
       }
-      return next(err);
+      throw next(err);
     });
 };
 
 module.exports.deleteItem = (req, res, next) =>
-  Item.findByIdAndDelete(req.params.id)
+    Item.findById(req.params.id)
     .then((item) => {
       if (!item) {
-        return next(new NotFoundError("Item not found"));
+        throw new NotFoundError("Item not found");
       }
 
-      if (item.owner.toString() !== req.user._id) {
-        return next(new ForbiddenError("You can only delete your own items"));
+      if (!item.owner.equals(req.user._id)) {
+        throw new ForbiddenError("You can only delete your own items");
       }
-      return res.send({ data: item });
+
+      return Item.deleteOne({ _id: item._id });
     })
+    .then(() => res.status(200).send({ message: "Deleted successfully" }))
     .catch((err) => {
       if (err.name === "CastError") {
         return next(new BadRequestError("Invalid item ID"));
@@ -44,3 +46,4 @@ module.exports.deleteItem = (req, res, next) =>
 
       return next(err);
     });
+
