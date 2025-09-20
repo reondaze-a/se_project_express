@@ -15,7 +15,7 @@ const router = express.Router();
 // Centralized route handling
 router.use('/users', auth, usersRouter);
 router.use('/items', clothingItemsRouter);
-router.use('/items/:itemId/likes', auth, celebrateTests.idTest, likesRouter);
+router.use('/items/:itemId/likes', auth, celebrateTests.itemIdTest, likesRouter);
 
 // Authentication routes
 router.get('/crash-test', () => { // test code

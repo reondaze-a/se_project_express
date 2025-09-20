@@ -4,8 +4,8 @@ const express = require("express");
 const helmet = require("helmet");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const routes = require("./routes/index");
 const { isCelebrateError } = require("celebrate");
+const routes = require("./routes/index");
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { apiLimiter } = require("./middlewares/limiter")
 
@@ -35,38 +35,33 @@ app.use((req, res, next) => { // non error route
 // enable error logger
 app.use(errorLogger)
 
-
+/* eslint-disable-next-line no-unused-vars */
 app.use((err, req, res, next) => {
   if (isCelebrateError(err)) {
-    // Collect Joi details
     const problems = [];
-    for (const [segment, joiError] of err.details) {
-      for (const d of joiError.details) {
+
+    // err.details
+    err.details.forEach((joiError, segment) => {
+      // joiError.details array
+      joiError.details.forEach((d) => {
         problems.push({
           segment,
           field: d.path.join('.'),
           type: d.type,
           message: d.message,
         });
-      }
-    }
-
-    const mainMessage = problems[0]?.message || 'Validation error'; // get the Joi message
-
-    return res.status(400).json({
-      message: mainMessage,        // Joi error message gets passed
-      errors: problems,
+      });
     });
+
+    const mainMessage = (problems[0] && problems[0].message) || 'Validation error';
+    return res.status(400).json({ message: mainMessage, errors: problems });
   }
 
-  const { statusCode = 500, message } = err;
-  res.status(statusCode).json({
-    message:
-      statusCode === 500 ? "An internal server error has occured" : message,
-  });
-
-  next();
+  const statusCode = err.statusCode || 500;
+  const message = statusCode === 500 ? 'An internal server error has occured' : err.message;
+  return res.status(statusCode).json({ message });
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

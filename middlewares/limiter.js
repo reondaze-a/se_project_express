@@ -1,8 +1,7 @@
-const rateLimit = require('express-rate-limit');
+const { rateLimit, ipKeyGenerator} = require('express-rate-limit');
 
-// Generic API limiter (per IP)
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,          
+  windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
@@ -12,7 +11,7 @@ const apiLimiter = rateLimit({
       typeof options.message === 'string' ? { message: options.message } : options.message
     );
   },
-  keyGenerator: (req) => req.ip,
+  keyGenerator: ipKeyGenerator
 });
 
 module.exports = { apiLimiter };
