@@ -64,7 +64,7 @@ const celebrateTests = {
   }),
 
   // item params id test
-  itemIdTest: celebrate({
+  idTest: celebrate({
     params: Joi.object().keys({
       id: Joi.string().hex().length(24).required().messages({
         'string.hex': 'The "itemId" must be hexadecimal',
