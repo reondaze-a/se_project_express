@@ -51,17 +51,6 @@ const celebrateTests = {
     }),
   }),
 
-  // (body with _id)
-  idTest: celebrate({
-    body: Joi.object().keys({
-      _id: Joi.string().hex().length(24).required().messages({
-        'string.hex': 'The "_id" must be hexadecimal',
-        'string.length': 'The "_id" must be 24 characters long',
-        'string.empty': 'The "_id" field must be filled in',
-        'any.required': 'The "_id" field is required',
-      }),
-    }),
-  }),
 
   // id params tests
   idTest: celebrate({
