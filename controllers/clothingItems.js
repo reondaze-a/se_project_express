@@ -19,9 +19,9 @@ module.exports.createItem = (req, res, next) => {
     .then((item) => res.status(createSuccess).send({ data: item }))
     .catch((err) => {
       if (err.name === "ValidationError") {
-        throw next(new BadRequestError("Invalid item data"));
+        return next(new BadRequestError("Invalid item data"));
       }
-      throw next(err);
+      return next(err);
     });
 };
 
@@ -29,11 +29,11 @@ module.exports.deleteItem = (req, res, next) =>
     Item.findById(req.params.id)
     .then((item) => {
       if (!item) {
-        throw new NotFoundError("Item not found");
+        return next(new NotFoundError("Item not found"));
       }
 
       if (!item.owner.equals(req.user._id)) {
-        throw new ForbiddenError("You can only delete your own items");
+        return next(new ForbiddenError("You can only delete your own items"));
       }
 
       return Item.deleteOne({ _id: item._id });

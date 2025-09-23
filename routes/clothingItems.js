@@ -11,6 +11,6 @@ router.get('/', getItems);
 
 router.post('/', auth, celebrateTests.postItemTest, createItem);
 
-router.delete('/:id', auth, celebrateTests.itemIdTest, deleteItem);
+router.delete('/:id', auth, celebrateTests.idTest, deleteItem);
 
 module.exports = router;
