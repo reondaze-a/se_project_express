@@ -14,7 +14,15 @@ const { NotFoundError } = require("./utils/errors")
 const app = express();
 const { PORT = 3001 } = process.env;
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://reondaze-a.github.io"
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
