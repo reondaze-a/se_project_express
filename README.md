@@ -3,7 +3,7 @@ The back-end project for the WTWR application. This back-end repo manages data f
 
 [Click here to see the front-end repo of the project](https://github.com/reondaze-a/se_project_react)
 
-[WTWR App](https://whattowear.strangled.net/)
+[WTWR App](https://reondaze,github.io/se_project_react)
 
 ## Features
 - User registration and authentication (JWT)
